@@ -17,7 +17,7 @@ public class AppointmentService : IAppointmentService
 
     public async Task<Appointment> CreateAsync(CreateAppointmentDto dto)
     {
-        var user = await _userRepo.GetByIdAsync(dto.UserId);
+        var user = await _userRepo.GetByIdAsync(dto.userId);
         if (user is null) throw new Exception("User not found.");
 
         // Simple rule: appointment date must be >= today
@@ -25,7 +25,7 @@ public class AppointmentService : IAppointmentService
 
         var appt = new Appointment
         {
-            UserId = dto.UserId,
+            userId = dto.userId,
             Appointment_Date = dto.Appointment_Date,
             Appointment_Time = dto.Appointment_Time,
             Status = "pending"

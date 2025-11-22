@@ -23,7 +23,7 @@ public class NotificationRepository : INotificationRepository
 
     public async Task<IEnumerable<Notification>> GetAllAsync()
     {
-        return await _db.Notifications.OrderByDescending(n => n.CreatedAt).ToListAsync();
+        return await _db.Notifications.OrderByDescending(n => n.createdAt).ToListAsync();
     }
 
     public async Task<Notification?> GetByIdAsync(Guid id)

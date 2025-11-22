@@ -2,21 +2,21 @@ namespace ClinicApi.DTOs;
 
 public class RegisterDto
 {
-    public string FullName { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
-    public string? PhoneNumber { get; set; }
-    public string? City { get; set; }
-    public string? Role { get; set; }
-    public string? Speciality { get; set; }
-    public string? Location { get; set; }
-    public string? Image { get; set; }
-    public string? Bio { get; set; }
-    public decimal? Reservation_Price { get; set; }
+    public string fullName { get; set; } = null!;
+    public string email { get; set; } = null!;
+    public string password { get; set; } = null!;
+    public string? phoneNumber { get; set; }
+    public string? city { get; set; }
+    public string? role { get; set; }
+    public string? speciality { get; set; }
+    public string? location { get; set; }
+    public string? image { get; set; }
+    public string? bio { get; set; }
+    public decimal? reservationPrice { get; set; }
 }
 
 public class LoginDto
 {
-    public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
+    public string email { get; set; } = null!;
+    public string password { get; set; } = null!;
 }

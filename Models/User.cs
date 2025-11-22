@@ -1,24 +1,25 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicApi.Models;
 
-public enum Gender { Male, Female, Other }
+public enum gender { Male, Female, Other }
 
 public class User
 {
     [Key]
-    public Guid UserId { get; set; } = Guid.NewGuid();
-    public string FullName { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public Gender? Gender { get; set; }
-    public string Email { get; set; } = null!;
-    public string PasswordHash { get; set; } = null!;
-    public string? PhoneNumber { get; set; }
-    public string? City { get; set; }
-    public string Role { get; set; } = "Patient"; // Patient or Doctors
-    public string? Speciality { get; set; }
-    public string? Location { get; set; }
-    public string? Image { get; set; }
-    public string? Bio { get; set; }
-    public decimal? Reservation_Price { get; set; }
+    public Guid userId { get; set; } = Guid.NewGuid();
+    public string fullName { get; set; } = null!;
+    public DateTime createdAt { get; set; } = DateTime.UtcNow;
+    public gender? gender { get; set; }
+    public string email { get; set; } = null!;
+    public string passwordHash { get; set; } = null!;
+    public string? phoneNumber { get; set; }
+    public string? city { get; set; }
+    public string role { get; set; } = "patient"; // patient or doctor
+    public string? speciality { get; set; }
+    public string? location { get; set; }
+    public string? image { get; set; }
+    public string? bio { get; set; }
+    public decimal? reservationPrice { get; set; }
 }

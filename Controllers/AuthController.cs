@@ -17,7 +17,7 @@ public class AuthController : ControllerBase
         try
         {
             var user = await _auth.RegisterAsync(dto);
-            return CreatedAtAction(nameof(Register), new { id = user.UserId }, new { user.UserId, user.Email, user.FullName });
+            return CreatedAtAction(nameof(Register), new { id = user.userId }, new { user.userId, user.email, user.fullName });
         }
         catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }

@@ -8,5 +8,5 @@ public class Notification
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Message { get; set; } = null!;
     public bool IsRead { get; set; } = false;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime createdAt { get; set; } = DateTime.UtcNow;
 }

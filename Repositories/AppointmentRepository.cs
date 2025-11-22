@@ -28,7 +28,7 @@ public class AppointmentRepository : IAppointmentRepository
 
     public async Task<IEnumerable<Appointment>> GetByUserAsync(Guid userId)
     {
-        return await _db.Appointments.Where(a => a.UserId == userId).ToListAsync();
+        return await _db.Appointments.Where(a => a.userId == userId).ToListAsync();
     }
 
     public async Task UpdateAsync(Appointment appt)

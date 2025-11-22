@@ -8,10 +8,10 @@ public class Appointment
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
     [ForeignKey("User")]
-    public Guid UserId { get; set; }
+    public Guid userId { get; set; }
     public User? User { get; set; }
     public TimeSpan Appointment_Time { get; set; }
     public DateOnly Appointment_Date { get; set; }
     public string Status { get; set; } = "pending"; // pending-canceled-confirmed-deleted
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime createdAt { get; set; } = DateTime.UtcNow;
 }

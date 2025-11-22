@@ -21,22 +21,22 @@ public class AuthService : IAuthService
 
     public async Task<User> RegisterAsync(RegisterDto dto)
     {
-        var exists = await _userRepo.GetByEmailAsync(dto.Email);
+        var exists = await _userRepo.GetByEmailAsync(dto.email);
         if (exists is not null) throw new Exception("Email already registered.");
 
         var user = new User
         {
-            FullName = dto.FullName,
-            Email = dto.Email,
-            Role = dto.Role ?? "Patient",
-            PhoneNumber = dto.PhoneNumber,
-            City = dto.City,
-            Speciality = dto.Speciality,
-            Location = dto.Location,
-            Bio = dto.Bio,
-            Image = dto.Image,
-            Reservation_Price = dto.Reservation_Price,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+            fullName = dto.fullName,
+            email = dto.email,
+            role = dto.role ?? "patient",
+            phoneNumber = dto.phoneNumber,
+            city = dto.city,
+            speciality = dto.speciality,
+            location = dto.location,
+            bio = dto.bio,
+            image = dto.image,
+            reservationPrice = dto.reservationPrice,
+            passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.password)
         };
 
         await _userRepo.AddAsync(user);
@@ -45,9 +45,9 @@ public class AuthService : IAuthService
 
     public async Task<string> LoginAsync(LoginDto dto)
     {
-        var user = await _userRepo.GetByEmailAsync(dto.Email);
+        var user = await _userRepo.GetByEmailAsync(dto.email);
         if (user is null) throw new Exception("Invalid credentials.");
-        if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash)) throw new Exception("Invalid credentials.");
+        if (!BCrypt.Net.BCrypt.Verify(dto.password, user.passwordHash)) throw new Exception("Invalid credentials.");
 
         // create token
         var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"] ?? "ReplaceWithStrongKeyInProduction");
@@ -55,9 +55,9 @@ public class AuthService : IAuthService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.NameIdentifier, user.userId.ToString()),
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Role, user.role)
             }),
             Expires = DateTime.UtcNow.AddHours(8),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

@@ -17,7 +17,7 @@ public class ScheduleService : IScheduleService
 
     public async Task<Schedule> CreateAsync(CreateScheduleDto dto)
     {
-        var user = await _userRepo.GetByIdAsync(dto.UserId);
+        var user = await _userRepo.GetByIdAsync(dto.userId);
         if (user is null) throw new Exception("User not found.");
 
         if (dto.End_Time <= dto.Start_Time) throw new Exception("End time must be after start time.");
@@ -25,7 +25,7 @@ public class ScheduleService : IScheduleService
 
         var s = new Schedule
         {
-            UserId = dto.UserId,
+            userId = dto.userId,
             Day_Of_Week = dto.Day_Of_Week,
             Start_Time = dto.Start_Time,
             End_Time = dto.End_Time,

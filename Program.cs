@@ -1,4 +1,4 @@
-using ClinicApi.Data;
+﻿using ClinicApi.Data;
 using ClinicApi.Repositories;
 using ClinicApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,30 +8,45 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
+// ==================== Services ====================
+
+// Controllers + Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DbContext - use connection string from appsettings
+// DbContext - connection string from appsettings.json
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-
-// Repositories & Services
+// Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
+// Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
-// JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"];
-var key = Encoding.ASCII.GetBytes(jwtKey ?? "ReplaceWithStrongKeyInProduction");
+// ==================== CORS ====================
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000") // React dev server
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        //.AllowCredentials(); // فقط لو هتستخدم Cookies/JWT auth
+    });
+});
+
+// ==================== JWT Authentication (Commented for dev) ====================
+//var jwtKey = builder.Configuration["Jwt:Key"];
+//var key = Encoding.ASCII.GetBytes(jwtKey ?? "ReplaceWithStrongKeyInProduction");
 //builder.Services.AddAuthentication(options =>
 //{
 //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -39,7 +54,7 @@ var key = Encoding.ASCII.GetBytes(jwtKey ?? "ReplaceWithStrongKeyInProduction");
 //})
 //.AddJwtBearer(options =>
 //{
-//    options.RequireHttpsMetadata = false;
+//    options.RequireHttpsMetadata = false; // مهم للتطوير
 //    options.SaveToken = true;
 //    options.TokenValidationParameters = new TokenValidationParameters
 //    {
@@ -53,15 +68,22 @@ var key = Encoding.ASCII.GetBytes(jwtKey ?? "ReplaceWithStrongKeyInProduction");
 
 var app = builder.Build();
 
+// ==================== Middleware ====================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+// CORS middleware - مهم يكون قبل أي Authentication/Authorization
+app.UseCors("AllowFrontend");
 
+// Uncomment these lines لو هتفعل JWT Authentication
+// app.UseAuthentication();
+// app.UseAuthorization();
+
+// Map Controllers
 app.MapControllers();
 
+// Run app
 app.Run();

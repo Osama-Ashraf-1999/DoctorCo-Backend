@@ -28,7 +28,7 @@ public class ScheduleRepository : IScheduleRepository
 
     public async Task<IEnumerable<Schedule>> GetByUserAsync(Guid userId)
     {
-        return await _db.Schedules.Where(s => s.UserId == userId).ToListAsync();
+        return await _db.Schedules.Where(s => s.userId == userId).ToListAsync();
     }
 
     public async Task UpdateAsync(Schedule schedule)
