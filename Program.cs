@@ -40,31 +40,31 @@ builder.Services.AddCors(options =>
             .WithOrigins("http://localhost:3000") // React dev server
             .AllowAnyHeader()
             .AllowAnyMethod();
-        //.AllowCredentials(); // فقط لو هتستخدم Cookies/JWT auth
     });
 });
 
-// ==================== JWT Authentication (Commented for dev) ====================
-//var jwtKey = builder.Configuration["Jwt:Key"];
-//var key = Encoding.ASCII.GetBytes(jwtKey ?? "ReplaceWithStrongKeyInProduction");
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//.AddJwtBearer(options =>
-//{
-//    options.RequireHttpsMetadata = false; // مهم للتطوير
-//    options.SaveToken = true;
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(key),
-//        ValidateIssuer = false,
-//        ValidateAudience = false,
-//        ClockSkew = TimeSpan.Zero
-//    };
-//});
+// ==================== JWT Authentication ====================
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "ReplaceWithStrongKeyInProduction";
+var key = Encoding.ASCII.GetBytes(jwtKey);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false; // للتطوير
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 var app = builder.Build();
 
@@ -75,12 +75,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// CORS middleware - مهم يكون قبل أي Authentication/Authorization
+// CORS middleware
 app.UseCors("AllowFrontend");
 
-// Uncomment these lines لو هتفعل JWT Authentication
-// app.UseAuthentication();
-// app.UseAuthorization();
+// Authentication & Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Map Controllers
 app.MapControllers();

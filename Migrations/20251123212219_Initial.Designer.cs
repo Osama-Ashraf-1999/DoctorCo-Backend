@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinicApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251122121840_InitialCreateClean")]
-    partial class InitialCreateClean
+    [Migration("20251123212219_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
