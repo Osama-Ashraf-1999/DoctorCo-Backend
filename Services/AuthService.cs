@@ -70,8 +70,13 @@ public class AuthService : IAuthService
         return tokenHandler.WriteToken(token);
     }
 
-    public Task GetUserByEmail(string email)
+    // public Task GetUserByEmail(string email)
+    // {
+    //     throw new NotImplementedException();
+    //  }
+
+    public async Task<User> GetUserByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        return await _userRepo.GetByEmailAsync(email);
     }
 }

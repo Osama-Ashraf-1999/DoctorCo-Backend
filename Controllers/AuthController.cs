@@ -1,4 +1,5 @@
 ﻿using ClinicApi.DTOs;
+using ClinicApi.Models;
 using ClinicApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,6 @@ public class AuthController : ControllerBase
         {
             var user = await _auth.RegisterAsync(dto);
 
-            // نرجع بيانات أساسية للفرونت إند بدون الباسوورد
             return Created("", new
             {
                 userId = user.userId,
@@ -45,9 +45,26 @@ public class AuthController : ControllerBase
         try
         {
             var token = await _auth.LoginAsync(dto);
+            var user = await _auth.GetUserByEmailAsync(dto.email); // ناخد بيانات اليوزر كاملة
 
-            // نرجع التوكن فقط للفرونت إند
-            return Ok(new { token });
+            return Ok(new
+            {
+                token,
+                user = new
+                {
+                    user.userId,
+                    user.fullName,
+                    user.email,
+                    user.role,
+                    user.phoneNumber,
+                    user.city,
+                    user.speciality,
+                    user.location,
+                    user.bio,
+                    user.image,
+                    user.reservationPrice
+                }
+            });
         }
         catch (Exception ex)
         {
