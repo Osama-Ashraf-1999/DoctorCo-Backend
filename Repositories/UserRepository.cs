@@ -1,4 +1,4 @@
-using ClinicApi.Data;
+﻿using ClinicApi.Data;
 using ClinicApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,5 +35,13 @@ public class UserRepository : IUserRepository
     {
         _db.Users.Update(user);
         await _db.SaveChangesAsync();
+    }
+
+    // ✅ دكاترة بس
+    public async Task<IEnumerable<User>> GetDoctorsAsync()
+    {
+        return await _db.Users
+            .Where(u => u.role == "doctor")
+            .ToListAsync();
     }
 }
