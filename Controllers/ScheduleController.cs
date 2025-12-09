@@ -25,7 +25,6 @@ public class ScheduleController : ControllerBase
         catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
 
-    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -34,7 +33,6 @@ public class ScheduleController : ControllerBase
         return Ok(s);
     }
 
-    [Authorize]
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetByUser(Guid userId)
     {
@@ -42,7 +40,6 @@ public class ScheduleController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, UpdateScheduleDto dto)
     {
@@ -54,7 +51,6 @@ public class ScheduleController : ControllerBase
         catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
 
-    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {

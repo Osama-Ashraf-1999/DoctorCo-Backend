@@ -1,4 +1,4 @@
-using ClinicApi.DTOs;
+﻿using ClinicApi.DTOs;
 using ClinicApi.Models;
 using ClinicApi.Repositories;
 
@@ -17,18 +17,23 @@ public class AppointmentService : IAppointmentService
 
     public async Task<Appointment> CreateAsync(CreateAppointmentDto dto)
     {
-        var user = await _userRepo.GetByIdAsync(dto.userId);
-        if (user is null) throw new Exception("User not found.");
+        var patient = await _userRepo.GetByIdAsync(dto.PatientId);
+        if (patient is null) throw new Exception("Patient not found.");
 
-        // Simple rule: appointment date must be >= today
-        if (dto.Appointment_Date < DateOnly.FromDateTime(DateTime.UtcNow)) throw new Exception("Appointment date cannot be in the past.");
+        var doctor = await _userRepo.GetByIdAsync(dto.DoctorId);
+        if (doctor is null) throw new Exception("Doctor not found.");
+
+        if (dto.Appointment_Date < DateOnly.FromDateTime(DateTime.UtcNow))
+            throw new Exception("Appointment date cannot be in the past.");
 
         var appt = new Appointment
         {
-            userId = dto.userId,
+            PatientId = dto.PatientId,
+            DoctorId = dto.DoctorId,
             Appointment_Date = dto.Appointment_Date,
             Appointment_Time = dto.Appointment_Time,
-            Status = "pending"
+            Status = "pending",
+            Description = dto.Description
         };
 
         await _repo.AddAsync(appt);
@@ -44,15 +49,21 @@ public class AppointmentService : IAppointmentService
 
     public async Task<Appointment?> GetByIdAsync(Guid id) => await _repo.GetByIdAsync(id);
 
-    public async Task<IEnumerable<Appointment>> GetByUserAsync(Guid userId) => await _repo.GetByUserAsync(userId);
+    public async Task<IEnumerable<Appointment>> GetByUserAsync(Guid userId)
+    {
+        var asPatient = await _repo.GetByPatientAsync(userId);
+        var asDoctor = await _repo.GetByDoctorAsync(userId);
+        return asPatient.Concat(asDoctor);
+    }
 
     public async Task UpdateStatusAsync(Guid id, string status)
     {
         var a = await _repo.GetByIdAsync(id);
         if (a is null) throw new Exception("Appointment not found.");
-        // allowed statuses
+
         var allowed = new[] { "pending", "canceled", "confirmed", "deleted" };
         if (!allowed.Contains(status)) throw new Exception("Invalid status.");
+
         a.Status = status;
         await _repo.UpdateAsync(a);
     }

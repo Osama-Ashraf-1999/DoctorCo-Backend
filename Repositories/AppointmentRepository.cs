@@ -23,12 +23,26 @@ public class AppointmentRepository : IAppointmentRepository
 
     public async Task<Appointment?> GetByIdAsync(Guid id)
     {
-        return await _db.Appointments.Include(a => a.User).FirstOrDefaultAsync(a => a.Id == id);
+        return await _db.Appointments
+            .Include(a => a.Doctor)
+            .Include(a => a.Patient)
+            .FirstOrDefaultAsync(a => a.Id == id);
     }
 
-    public async Task<IEnumerable<Appointment>> GetByUserAsync(Guid userId)
+    public async Task<IEnumerable<Appointment>> GetByDoctorAsync(Guid doctorId)
     {
-        return await _db.Appointments.Where(a => a.userId == userId).ToListAsync();
+        return await _db.Appointments
+            .Include(a => a.Patient)
+            .Where(a => a.DoctorId == doctorId)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Appointment>> GetByPatientAsync(Guid patientId)
+    {
+        return await _db.Appointments
+            .Include(a => a.Doctor)
+            .Where(a => a.PatientId == patientId)
+            .ToListAsync();
     }
 
     public async Task UpdateAsync(Appointment appt)

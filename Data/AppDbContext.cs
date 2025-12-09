@@ -1,4 +1,4 @@
-using ClinicApi.Models;
+﻿using ClinicApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinicApi.Data;
@@ -16,12 +16,26 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Map DateOnly to column
+        // تحويل DateOnly إلى DateTime في قاعدة البيانات
         modelBuilder.Entity<Appointment>()
             .Property(a => a.Appointment_Date)
             .HasConversion(
                 d => d.ToDateTime(TimeOnly.MinValue),
                 d => DateOnly.FromDateTime(d)
             );
+
+        // علاقات Doctor و Patient بدون cascade (لحل مشكلة multiple cascade paths)
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Doctor)
+            .WithMany()
+            .HasForeignKey(a => a.DoctorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Patient)
+            .WithMany()
+            .HasForeignKey(a => a.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }
