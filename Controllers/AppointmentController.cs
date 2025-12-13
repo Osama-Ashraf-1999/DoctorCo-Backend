@@ -24,7 +24,7 @@ public class AppointmentController : ControllerBase
         catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -33,7 +33,7 @@ public class AppointmentController : ControllerBase
         return Ok(a);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetByUser(Guid userId)
     {
@@ -41,7 +41,7 @@ public class AppointmentController : ControllerBase
         return Ok(list);
     }
 
-    [Authorize]
+   // [Authorize]
     [HttpPatch("{id}/status")]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] string status)
     {
@@ -53,7 +53,7 @@ public class AppointmentController : ControllerBase
         catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
 
-    [Authorize]
+   // [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {

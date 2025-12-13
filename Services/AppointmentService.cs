@@ -32,7 +32,7 @@ public class AppointmentService : IAppointmentService
             DoctorId = dto.DoctorId,
             Appointment_Date = dto.Appointment_Date,
             Appointment_Time = dto.Appointment_Time,
-            Status = "pending",
+            Status = "inProgress",
             Description = dto.Description
         };
 
@@ -61,7 +61,7 @@ public class AppointmentService : IAppointmentService
         var a = await _repo.GetByIdAsync(id);
         if (a is null) throw new Exception("Appointment not found.");
 
-        var allowed = new[] { "pending", "canceled", "confirmed", "deleted" };
+        var allowed = new[] { "inProgress", "canceled", "confirmed", "deleted" };
         if (!allowed.Contains(status)) throw new Exception("Invalid status.");
 
         a.Status = status;
