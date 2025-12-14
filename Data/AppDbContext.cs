@@ -5,7 +5,8 @@ namespace ClinicApi.Data;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options) { }
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Appointment> Appointments { get; set; } = null!;
@@ -16,7 +17,9 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // تحويل DateOnly إلى DateTime في قاعدة البيانات
+        /* ===============================
+           DateOnly Conversion
+        =============================== */
         modelBuilder.Entity<Appointment>()
             .Property(a => a.Appointment_Date)
             .HasConversion(
@@ -24,18 +27,22 @@ public class AppDbContext : DbContext
                 d => DateOnly.FromDateTime(d)
             );
 
-        // علاقات Doctor و Patient بدون cascade (لحل مشكلة multiple cascade paths)
+        /* ===============================
+           Doctor Relationship
+        =============================== */
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Doctor)
-            .WithMany()
+            .WithMany() // مفيش Navigation فى User
             .HasForeignKey(a => a.DoctorId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        /* ===============================
+           Patient Relationship
+        =============================== */
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Patient)
-            .WithMany()
+            .WithMany() // مفيش Navigation فى User
             .HasForeignKey(a => a.PatientId)
             .OnDelete(DeleteBehavior.Restrict);
-
     }
 }

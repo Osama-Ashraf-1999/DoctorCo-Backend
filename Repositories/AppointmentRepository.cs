@@ -1,13 +1,14 @@
-using ClinicApi.Data;
-using ClinicApi.Models;
 using Microsoft.EntityFrameworkCore;
-
-namespace ClinicApi.Repositories;
+using ClinicApi.Data;
+using ClinicApi.Repositories;
 
 public class AppointmentRepository : IAppointmentRepository
 {
     private readonly AppDbContext _db;
-    public AppointmentRepository(AppDbContext db) { _db = db; }
+    public AppointmentRepository(AppDbContext db)
+    {
+        _db = db;
+    }
 
     public async Task AddAsync(Appointment appt)
     {
@@ -33,6 +34,7 @@ public class AppointmentRepository : IAppointmentRepository
     {
         return await _db.Appointments
             .Include(a => a.Patient)
+            .Include(a => a.Doctor)
             .Where(a => a.DoctorId == doctorId)
             .ToListAsync();
     }
@@ -41,6 +43,7 @@ public class AppointmentRepository : IAppointmentRepository
     {
         return await _db.Appointments
             .Include(a => a.Doctor)
+            .Include(a => a.Patient)
             .Where(a => a.PatientId == patientId)
             .ToListAsync();
     }
