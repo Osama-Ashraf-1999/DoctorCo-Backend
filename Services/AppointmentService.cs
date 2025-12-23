@@ -61,7 +61,7 @@ public class AppointmentService : IAppointmentService
         var a = await _repo.GetByIdAsync(id);
         if (a is null) throw new Exception("Appointment not found.");
 
-        var allowed = new[] { "inProgress", "canceled", "confirmed", "deleted" };
+        var allowed = new[] { "inProgress", "completed", "canceled", "confirmed", "deleted" };
         if (!allowed.Contains(status)) throw new Exception("Invalid status.");
 
         a.Status = status;
