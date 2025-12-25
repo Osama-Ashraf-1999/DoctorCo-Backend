@@ -13,6 +13,8 @@ public class RegisterDto
     public string? image { get; set; }
     public string? bio { get; set; }
     public decimal? reservationPrice { get; set; }
+    public string? gender { get; set; }
+
 }
 
 public class LoginDto

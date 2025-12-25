@@ -3,6 +3,7 @@ using ClinicApi.Models;
 using ClinicApi.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 
@@ -12,6 +13,7 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepo;
     private readonly IConfiguration _config;
+    private object gender;
 
     public AuthService(IUserRepository userRepo, IConfiguration config)
     {
@@ -36,13 +38,20 @@ public class AuthService : IAuthService
             bio = dto.bio,
             image = dto.image,
             reservationPrice = dto.reservationPrice,
-            passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.password)
+            passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.password),
+            gender = dto.gender?.ToLower() switch
+            {
+                "male" => Models.Gender.Male,
+                "female" => Models.Gender.Female,
+                "other" => Models.Gender.Other,
+                _ => null
+            }
         };
 
         await _userRepo.AddAsync(user);
         return user;
     }
-    
+
     public async Task<string> LoginAsync(LoginDto dto)
     {
         var user = await _userRepo.GetByEmailAsync(dto.email);
@@ -50,7 +59,6 @@ public class AuthService : IAuthService
         if (!BCrypt.Net.BCrypt.Verify(dto.password, user.passwordHash))
             throw new Exception("Invalid credentials.");
 
-        // إنشاء التوكن
         var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"] ?? "ReplaceWithStrongKeyInProduction");
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -69,11 +77,6 @@ public class AuthService : IAuthService
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-
-    // public Task GetUserByEmail(string email)
-    // {
-    //     throw new NotImplementedException();
-    //  }
 
     public async Task<User> GetUserByEmailAsync(string email)
     {
