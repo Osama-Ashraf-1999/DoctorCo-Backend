@@ -64,4 +64,12 @@ public class AppointmentController : ControllerBase
         }
         catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
+
+    // [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var list = await _svc.GetAllAsync();
+        return Ok(list);
+    }
 }

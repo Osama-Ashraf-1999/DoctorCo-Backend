@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicApi.Models;
 
-public enum gender { Male, Female, Other }
+public enum Gender { Male, Female, Other }
 
 public class User
 {
@@ -11,7 +11,7 @@ public class User
     public Guid userId { get; set; } = Guid.NewGuid();
     public string fullName { get; set; } = null!;
     public DateTime createdAt { get; set; } = DateTime.UtcNow;
-    public gender? gender { get; set; }
+    public Gender? gender { get; set; }
     public string email { get; set; } = null!;
     public string passwordHash { get; set; } = null!;
     public string? phoneNumber { get; set; }

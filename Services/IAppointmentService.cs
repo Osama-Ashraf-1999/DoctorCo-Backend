@@ -10,4 +10,5 @@ public interface IAppointmentService
     Task<IEnumerable<Appointment>> GetByUserAsync(Guid userId);
     Task UpdateStatusAsync(Guid id, string status);
     Task DeleteAsync(Guid id);
+    Task<IEnumerable<AppointmentDto>> GetAllAsync();
 }

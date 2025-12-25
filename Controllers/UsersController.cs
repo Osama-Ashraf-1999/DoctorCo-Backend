@@ -3,8 +3,11 @@ using ClinicApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace ClinicApi.Controllers
 {
+
+
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase

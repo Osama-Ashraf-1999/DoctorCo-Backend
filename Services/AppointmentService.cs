@@ -67,4 +67,9 @@ public class AppointmentService : IAppointmentService
         a.Status = status;
         await _repo.UpdateAsync(a);
     }
+
+    public async Task<IEnumerable<AppointmentDto>> GetAllAsync()
+    {
+        return await _repo.GetAllAsync();
+    }
 }
